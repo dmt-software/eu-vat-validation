@@ -9,7 +9,7 @@ use DMT\VatServiceEu\Response\CheckVatApproxResponse;
 use DMT\VatServiceEu\Response\CheckVatResponse;
 use DMT\VatServiceEu\Response\ResponseInterface;
 use GuzzleHttp\Client;
-use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
 
 /**
  * Class CheckVatHandler
@@ -24,16 +24,16 @@ class CheckVatHandler
     protected $httpClient;
 
     /**
-     * @var Serializer
+     * @var SerializerInterface
      */
     protected $serializer;
 
     /**
      * CheckVatHander constructor.
      * @param Client $httpClient
-     * @param Serializer $serializer
+     * @param SerializerInterface $serializer
      */
-    public function __construct(Client $httpClient, Serializer $serializer)
+    public function __construct(Client $httpClient, SerializerInterface $serializer)
     {
         $this->httpClient = $httpClient;
         $this->serializer = $serializer;

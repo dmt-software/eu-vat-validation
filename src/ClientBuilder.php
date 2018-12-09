@@ -4,14 +4,16 @@ namespace DMT\VatServiceEu;
 
 use DMT\CommandBus\Validator\ValidationMiddleware;
 use DMT\Soap\Serializer\SoapDateHandler;
-use DMT\Soap\Serializer\SoapDeserializationVisitor;
-use DMT\Soap\Serializer\SoapSerializationVisitor;
+use DMT\Soap\Serializer\SoapDeserializationVisitorFactory;
+use DMT\Soap\Serializer\SoapMessageEventSubscriber;
+use DMT\Soap\Serializer\SoapSerializationVisitorFactory;
 use DMT\VatServiceEu\Handler\CheckVatHandler;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
-use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
@@ -65,18 +67,24 @@ class ClientBuilder
     /**
      * Get the soap serializer.
      *
-     * @return Serializer
+     * @return SerializerInterface
      */
-    public function getSerializer(): Serializer
+    public function getSerializer(): SerializerInterface
     {
         AnnotationRegistry::registerUniqueLoader('class_exists');
 
-        $namingStrategy = new IdenticalPropertyNamingStrategy();
-
         return
             SerializerBuilder::create()
-                ->setSerializationVisitor('soap', new SoapSerializationVisitor($namingStrategy))
-                ->setDeserializationVisitor('soap', new SoapDeserializationVisitor($namingStrategy))
+                ->setSerializationVisitor('soap', new SoapSerializationVisitorFactory())
+                ->setDeserializationVisitor('soap', new SoapDeserializationVisitorFactory())
+                ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+                ->configureListeners(
+                    function (EventDispatcher $dispatcher) {
+                        $dispatcher->addSubscriber(
+                            new SoapMessageEventSubscriber()
+                        );
+                    }
+                )
                 ->configureHandlers(function (HandlerRegistry $registry) {
                     $registry->registerSubscribingHandler(new SoapDateHandler());
                 })

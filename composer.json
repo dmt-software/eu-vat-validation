@@ -14,8 +14,8 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "dmt-software/jms-soap-serializer": "^1.0",
+        "php": "^7.2",
+        "dmt-software/jms-soap-serializer": "^2.0",
         "dmt-software/command-bus-validator": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "doctrine/annotations": "^1.6",
