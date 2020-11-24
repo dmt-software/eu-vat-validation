@@ -5,7 +5,6 @@ namespace DMT\Test\VatServiceEu\Request;
 use DMT\CommandBus\Validator\ValidationException;
 use DMT\CommandBus\Validator\ValidationMiddleware;
 use DMT\VatServiceEu\Request\CheckVatApprox;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +41,6 @@ class CheckVatApproxTest extends TestCase
      *
      * @param CheckVatApprox $checkVat
      * @param string $message
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function testValidation(CheckVatApprox $checkVat, string $message)
     {
@@ -66,8 +64,6 @@ class CheckVatApproxTest extends TestCase
      */
     public function provideViolation()
     {
-        AnnotationRegistry::registerUniqueLoader('class_exists');
-
         $serializer = SerializerBuilder::create()
             ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
             ->build();

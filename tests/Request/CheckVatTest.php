@@ -28,7 +28,6 @@ class CheckVatTest extends TestCase
      *
      * @param CheckVat $checkVat
      * @param string $message
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function testValidation(CheckVat $checkVat, string $message)
     {
@@ -52,8 +51,6 @@ class CheckVatTest extends TestCase
      */
     public function provideViolation()
     {
-        AnnotationRegistry::registerUniqueLoader('class_exists');
-
         $serializer = SerializerBuilder::create()
             ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
             ->build();
