@@ -29,7 +29,8 @@ class CheckVatHandler
     protected $serializer;
 
     /**
-     * CheckVatHander constructor.
+     * CheckVatHandler constructor.
+     *
      * @param Client $httpClient
      * @param SerializerInterface $serializer
      */
