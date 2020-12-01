@@ -9,14 +9,8 @@ build:
     nodes:
         tests: true
         analysis:
-            dependencies:
-                after:
-                    - composer require --dev "squizlabs/php_codesniffer=3.5.8"
             tests:
                 override:
-                    -
-                        command: phpcs-run
-                        use_website_config: true
                     - php-scrutinizer-run
 filter:
     excluded_paths:
