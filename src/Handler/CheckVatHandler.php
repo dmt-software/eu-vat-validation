@@ -29,7 +29,8 @@ class CheckVatHandler
     protected $serializer;
 
     /**
-     * CheckVatHander constructor.
+     * CheckVatHandler constructor.
+     *
      * @param Client $httpClient
      * @param SerializerInterface $serializer
      */
@@ -73,7 +74,7 @@ class CheckVatHandler
         $httpRequest = $this->serializer->serialize($request, 'soap');
 
         $httpResponse = $this->httpClient->post(
-            'http://ec.europa.eu/taxation_customs/vies/services/checkVatService',
+            'https://ec.europa.eu/taxation_customs/vies/services/checkVatService',
             [
                 'SOAPAction' => '""',
                 'Content-Type' => 'text/xml; charset=utf-8',

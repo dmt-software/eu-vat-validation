@@ -8,7 +8,6 @@ use DMT\Soap\Serializer\SoapDeserializationVisitorFactory;
 use DMT\Soap\Serializer\SoapMessageEventSubscriber;
 use DMT\Soap\Serializer\SoapSerializationVisitorFactory;
 use DMT\VatServiceEu\Handler\CheckVatHandler;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
@@ -37,7 +36,6 @@ class ClientBuilder
      * Build the client.
      *
      * @return Client
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function build(): Client
     {
@@ -71,8 +69,6 @@ class ClientBuilder
      */
     public function getSerializer(): SerializerInterface
     {
-        AnnotationRegistry::registerUniqueLoader('class_exists');
-
         return
             SerializerBuilder::create()
                 ->setSerializationVisitor('soap', new SoapSerializationVisitorFactory())

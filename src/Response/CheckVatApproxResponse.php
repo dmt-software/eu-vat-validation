@@ -2,6 +2,7 @@
 
 namespace DMT\VatServiceEu\Response;
 
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -33,7 +34,7 @@ class CheckVatApproxResponse implements ResponseInterface
      * @JMS\Type("DateTime<'Y-m-dP'>")
      * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     protected $requestDate;
                                     
@@ -174,17 +175,17 @@ class CheckVatApproxResponse implements ResponseInterface
     }
                                     
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getRequestDate(): ?\DateTime
+    public function getRequestDate(): ?DateTime
     {
         return $this->requestDate;
     }
 
     /**
-     * @param \DateTime $requestDate
+     * @param DateTime $requestDate
      */
-    public function setRequestDate(\DateTime $requestDate): void
+    public function setRequestDate(DateTime $requestDate): void
     {
         $this->requestDate = $requestDate;
     }

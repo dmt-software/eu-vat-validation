@@ -10,9 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class ClientBuilderTest extends TestCase
 {
-    /**
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     */
     public function testBuildClient()
     {
         $this->assertInstanceOf(Client::class, ClientBuilder::create()->build());
