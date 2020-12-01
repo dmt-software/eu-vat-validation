@@ -8,6 +8,9 @@ build:
                     format: 'clover'
     nodes:
         tests: true
+        dependencies:
+            after:
+                - composer require --dev "squizlabs/php_codesniffer=3.5.8"
         analysis:
             tests:
                 override:
