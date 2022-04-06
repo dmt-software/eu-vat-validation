@@ -3,6 +3,7 @@
 namespace DMT\VatServiceEu;
 
 use DMT\CommandBus\Validator\ValidationMiddleware;
+use DMT\Http\Client\RequestHandler;
 use DMT\Soap\Serializer\SoapDateHandler;
 use DMT\Soap\Serializer\SoapDeserializationVisitorFactory;
 use DMT\Soap\Serializer\SoapMessageEventSubscriber;
@@ -19,17 +20,48 @@ use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
 use League\Tactician\Handler\Locator\CallableLocator;
 use League\Tactician\Handler\MethodNameInflector\HandleClassNameWithoutSuffixInflector;
 use League\Tactician\Plugins\LockingMiddleware;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class ClientBuilder
 {
+    private ClientInterface $client;
+    private RequestFactoryInterface $requestFactory;
+
     /**
      * Create the client builder
      *
+     * @param ClientInterface $client
+     * @param RequestFactoryInterface $requestFactory
      * @return ClientBuilder
      */
-    public static function create(): ClientBuilder
+    public static function create(ClientInterface $client, RequestFactoryInterface $requestFactory): ClientBuilder
     {
-        return new static();
+        return (new static())
+            ->setClient($client)
+            ->setRequestFactory($requestFactory);
+    }
+
+    /**
+     * @param ClientInterface $client
+     * @return ClientBuilder
+     */
+    public function setClient(ClientInterface $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @param RequestFactoryInterface $requestFactory
+     * @return ClientBuilder
+     */
+    public function setRequestFactory(RequestFactoryInterface $requestFactory): self
+    {
+        $this->requestFactory = $requestFactory;
+
+        return $this;
     }
 
     /**
@@ -59,7 +91,7 @@ class ClientBuilder
      */
     public function getCheckVatHandler(): CheckVatHandler
     {
-        return new CheckVatHandler(new \GuzzleHttp\Client(), $this->getSerializer());
+        return new CheckVatHandler(new RequestHandler($this->client), $this->getSerializer(), $this->requestFactory);
     }
 
     /**

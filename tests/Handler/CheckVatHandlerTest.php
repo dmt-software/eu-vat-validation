@@ -2,6 +2,7 @@
 
 namespace DMT\Test\VatServiceEu\Handler;
 
+use DMT\Http\Client\RequestHandler;
 use DMT\Soap\Serializer\SoapFaultException;
 use DMT\Test\VatServiceEu\Fixtures\MockedResponseTrait;
 use DMT\VatServiceEu\ClientBuilder;
@@ -10,6 +11,7 @@ use DMT\VatServiceEu\Request\CheckVat;
 use DMT\VatServiceEu\Request\CheckVatApprox;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
 
 class CheckVatHandlerTest extends TestCase
@@ -29,7 +31,11 @@ class CheckVatHandlerTest extends TestCase
             )
         ]);
 
-        $handler = new CheckVatHandler($httpClient, ClientBuilder::create()->getSerializer());
+        $handler = new CheckVatHandler(
+            new RequestHandler($httpClient),
+            ClientBuilder::create($httpClient, new HttpFactory())->getSerializer(),
+            new HttpFactory()
+        );
         $response = $handler->handleCheckVat(new CheckVat());
 
         static::assertSame('NL', $response->getCountryCode());
@@ -47,7 +53,11 @@ class CheckVatHandlerTest extends TestCase
     {
         static::expectExceptionObject(new SoapFaultException('Server', $message));
 
-        $handler = new CheckVatHandler($httpClient, ClientBuilder::create()->getSerializer());
+        $handler = new CheckVatHandler(
+            new RequestHandler($httpClient),
+            ClientBuilder::create($httpClient, new HttpFactory())->getSerializer(),
+            new HttpFactory()
+        );
         $handler->handleCheckVat(new CheckVat());
     }
 
@@ -64,7 +74,11 @@ class CheckVatHandlerTest extends TestCase
             )
         ]);
 
-        $handler = new CheckVatHandler($httpClient, ClientBuilder::create()->getSerializer());
+        $handler = new CheckVatHandler(
+            new RequestHandler($httpClient),
+            ClientBuilder::create($httpClient, new HttpFactory())->getSerializer(),
+            new HttpFactory()
+        );
         $response = $handler->handleCheckVatApprox(new CheckVatApprox());
 
         static::assertSame('GB', $response->getCountryCode());
@@ -82,7 +96,11 @@ class CheckVatHandlerTest extends TestCase
     {
         static::expectExceptionObject(new SoapFaultException('Server', $message));
 
-        $handler = new CheckVatHandler($httpClient, ClientBuilder::create()->getSerializer());
+        $handler = new CheckVatHandler(
+            new RequestHandler($httpClient),
+            ClientBuilder::create($httpClient, new HttpFactory())->getSerializer(),
+            new HttpFactory()
+        );
         $handler->handleCheckVatApprox(new CheckVatApprox());
     }
 

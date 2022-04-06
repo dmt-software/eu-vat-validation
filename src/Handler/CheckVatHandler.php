@@ -2,6 +2,7 @@
 
 namespace DMT\VatServiceEu\Handler;
 
+use DMT\Http\Client\RequestHandlerInterface;
 use DMT\VatServiceEu\Request\CheckVat;
 use DMT\VatServiceEu\Request\CheckVatApprox;
 use DMT\VatServiceEu\Request\RequestInterface;
@@ -10,6 +11,7 @@ use DMT\VatServiceEu\Response\CheckVatResponse;
 use DMT\VatServiceEu\Response\ResponseInterface;
 use GuzzleHttp\Client;
 use JMS\Serializer\SerializerInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 /**
  * Class CheckVatHandler
@@ -19,9 +21,9 @@ use JMS\Serializer\SerializerInterface;
 class CheckVatHandler
 {
     /**
-     * @var Client
+     * @var RequestHandlerInterface
      */
-    protected $httpClient;
+    protected $requestHandler;
 
     /**
      * @var SerializerInterface
@@ -29,15 +31,25 @@ class CheckVatHandler
     protected $serializer;
 
     /**
+     * @var RequestFactoryInterface
+     */
+    protected $requestFactory;
+
+    /**
      * CheckVatHandler constructor.
      *
-     * @param Client $httpClient
+     * @param RequestHandlerInterface $httpClient
      * @param SerializerInterface $serializer
      */
-    public function __construct(Client $httpClient, SerializerInterface $serializer)
+    public function __construct(
+        RequestHandlerInterface $httpClient,
+        SerializerInterface     $serializer,
+        RequestFactoryInterface $requestFactory
+    )
     {
-        $this->httpClient = $httpClient;
+        $this->requestHandler = $httpClient;
         $this->serializer = $serializer;
+        $this->requestFactory = $requestFactory;
     }
 
     /**
@@ -71,16 +83,16 @@ class CheckVatHandler
      */
     protected function execute(RequestInterface $request, string $responseClass): ResponseInterface
     {
-        $httpRequest = $this->serializer->serialize($request, 'soap');
+        $httpRequest = $this->requestFactory
+            ->createRequest(
+                'POST',
+                'https://ec.europa.eu/taxation_customs/vies/services/checkVatService'
+            )
+            ->withHeader('Content-Type', 'text/xml; charset=utf-8')
+            ->withHeader( 'SOAPAction', '""');
+        $httpRequest->getBody()->write($this->serializer->serialize($request, 'soap'));
 
-        $httpResponse = $this->httpClient->post(
-            'https://ec.europa.eu/taxation_customs/vies/services/checkVatService',
-            [
-                'SOAPAction' => '""',
-                'Content-Type' => 'text/xml; charset=utf-8',
-                'body' => $httpRequest
-            ]
-        );
+        $httpResponse = $this->requestHandler->handle($httpRequest);
 
         return $this->serializer->deserialize($httpResponse->getBody(), $responseClass, 'soap');
     }
