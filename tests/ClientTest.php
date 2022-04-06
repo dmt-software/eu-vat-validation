@@ -8,6 +8,8 @@ use DMT\VatServiceEu\Request\CheckVat;
 use DMT\VatServiceEu\Request\CheckVatApprox;
 use DMT\VatServiceEu\Response\CheckVatApproxResponse;
 use DMT\VatServiceEu\Response\CheckVatResponse;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Psr7\HttpFactory;
 use League\Tactician\CommandBus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -57,7 +59,7 @@ class ClientTest extends TestCase
         $request->setCountryCode('NL');
         $request->setVatNumber('804888644B01');
 
-        $client = ClientBuilder::create()->build();
+        $client = ClientBuilder::create(new HttpClient(), new HttpFactory())->build();
 
         /** @var CheckVatResponse $response */
         $response = $client->execute($request);

@@ -22,13 +22,18 @@ use DMT\Soap\Serializer\SoapFaultException;
 use DMT\VatServiceEu\ClientBuilder;
 use DMT\VatServiceEu\Request\CheckVat;
 use DMT\VatServiceEu\Response\CheckVatResponse;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 try {
     $request = new CheckVat();
     $request->setCountryCode('NL');
     $request->setVatNumber('804888644B01');
 
-    $client = ClientBuilder::create()->build();
+    /** @var ClientInterface $client */
+    /** @var RequestFactoryInterface $requestFactory */
+    $client = ClientBuilder::create($client, $requestFactory)->build();
+    
     /** @var CheckVatResponse $response */
     $response = $client->execute($request);
     
