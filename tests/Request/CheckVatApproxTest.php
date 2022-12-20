@@ -50,9 +50,7 @@ class CheckVatApproxTest extends TestCase
             });
         } catch (ValidationException $exception) {
             $violations = array_map(
-                function (ConstraintViolation $violation) {
-                    return $violation->getMessage();
-                },
+                fn(ConstraintViolation $violation) => $violation->getMessage(),
                 iterator_to_array($exception->getViolations())
             );
             static::assertContains($message, $violations);
