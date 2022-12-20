@@ -36,9 +36,7 @@ class CheckVatTest extends TestCase
             $validator->execute($checkVat, function () {});
         } catch (ValidationException $exception) {
             $violations = array_map(
-                function (ConstraintViolation $violation) {
-                    return $violation->getMessage();
-                },
+                fn(ConstraintViolation $violation) => $violation->getMessage(),
                 iterator_to_array($exception->getViolations())
             );
             static::assertCount(1, $exception->getViolations());
