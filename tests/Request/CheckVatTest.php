@@ -5,7 +5,6 @@ namespace DMT\Test\VatServiceEu\Request;
 use DMT\CommandBus\Validator\ValidationException;
 use DMT\CommandBus\Validator\ValidationMiddleware;
 use DMT\VatServiceEu\Request\CheckVat;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
