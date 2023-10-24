@@ -16,7 +16,7 @@ class CheckVatResponse implements ResponseInterface
 {
     /**
      * @JMS\Type("string")
-     * @JMS\XmlElement(cdata=false)
+     * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
      * @var string
      */
@@ -24,7 +24,7 @@ class CheckVatResponse implements ResponseInterface
                                     
     /**
      * @JMS\Type("string")
-     * @JMS\XmlElement(cdata=false)
+     * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
      * @var string
      */
@@ -32,7 +32,7 @@ class CheckVatResponse implements ResponseInterface
                                     
     /**
      * @JMS\Type("DateTime<'Y-m-dP'>")
-     * @JMS\XmlElement(cdata=false)
+     * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
      * @var DateTime
      */
@@ -40,7 +40,7 @@ class CheckVatResponse implements ResponseInterface
                                     
     /**
      * @JMS\Type("boolean")
-     * @JMS\XmlElement(cdata=false)
+     * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
      * @var boolean
      */
@@ -48,7 +48,7 @@ class CheckVatResponse implements ResponseInterface
                                     
     /**
      * @JMS\Type("string")
-     * @JMS\XmlElement(cdata=false)
+     * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
      * @var string
      */
@@ -56,7 +56,7 @@ class CheckVatResponse implements ResponseInterface
                                     
     /**
      * @JMS\Type("string")
-     * @JMS\XmlElement(cdata=false)
+     * @JMS\XmlElement(cdata=false, namespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types")
      *
      * @var string
      */
