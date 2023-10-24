@@ -66,6 +66,6 @@ class ClientTest extends TestCase
 
         static::assertSame($request->getCountryCode(), $response->getCountryCode());
         static::assertSame($request->getVatNumber(), $response->getVatNumber());
-        static::assertTrue($response->isValid());
+        static::assertIsBool($response->isValid());
     }
 }

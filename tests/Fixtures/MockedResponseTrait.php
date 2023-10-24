@@ -32,21 +32,19 @@ TXT;
      * @var string
      */
     protected $checkVatResponse = <<<TXT
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    <soap:Body>
-        <checkVatResponse xmlns="urn:ec.europa.eu:taxud:vies:services:checkVat:types">
-            <countryCode>%s</countryCode>
-            <vatNumber>%s</vatNumber>
-            <requestDate>2016-06-16+02:00</requestDate>
-            <valid>true</valid>
-            <name>COMPANY &amp; CO</name>
-            <address>
-SOMEWHERE 00001
-772498 CITY
-            </address>
-        </checkVatResponse>
-    </soap:Body>
-</soap:Envelope>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+    <env:Header/>
+    <env:Body>
+        <ns2:checkVatResponse xmlns:ns2="urn:ec.europa.eu:taxud:vies:services:checkVat:types">
+            <ns2:countryCode>%s</ns2:countryCode>
+            <ns2:vatNumber>%s</ns2:vatNumber>
+            <ns2:requestDate>2023-10-24+02:00</ns2:requestDate>
+            <ns2:valid>true</ns2:valid>
+            <ns2:name></ns2:name>
+            <ns2:address></ns2:address>
+        </ns2:checkVatResponse>
+    </env:Body>
+</env:Envelope>
 TXT;
 
     /**
