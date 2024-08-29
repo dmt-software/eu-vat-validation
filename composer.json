@@ -17,7 +17,7 @@
         "php": ">=7.4",
         "dmt-software/jms-soap-serializer": "^2.1",
         "dmt-software/command-bus-validator": "^1.0",
-        "dmt-software/http-client-middleware": "^0.1.3"
+        "dmt-software/http-client-middleware": "^1.0 | ^2.0"
     },
     "autoload": {
         "psr-4": {
