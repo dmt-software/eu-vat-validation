@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "dmt-software/jms-soap-serializer": "^2.1",
         "dmt-software/command-bus-validator": "^1.0",
         "dmt-software/http-client-middleware": "^1.0 | ^2.0"
