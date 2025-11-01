@@ -12,24 +12,33 @@ use PHPUnit\Framework\TestCase;
 
 class ClientBuilderTest extends TestCase
 {
-    public function testBuildClient()
+    public function testBuildClient(): void
     {
-        $this->assertInstanceOf(Client::class, ClientBuilder::create(new HttpClient(), new HttpFactory())->build());
+        $this->assertInstanceOf(
+            Client::class,
+            ClientBuilder::create(new HttpClient(), new HttpFactory())->build()
+        );
     }
 
     /**
      * Check it the correct handler is returned when requested.
      */
-    public function testHandlerLocator()
+    public function testHandlerLocator(): void
     {
-        $this->assertInstanceOf(CheckVatHandler::class, ClientBuilder::create(new HttpClient(), new HttpFactory())->getCheckVatHandler());
+        $this->assertInstanceOf(
+            CheckVatHandler::class,
+            ClientBuilder::create(new HttpClient(), new HttpFactory())->getCheckVatHandler()
+        );
     }
 
     /**
      * Test if the configured soap serializer is returned.
      */
-    public function testGetSerializer()
+    public function testGetSerializer(): void
     {
-        $this->assertInstanceOf(Serializer::class, ClientBuilder::create(new HttpClient(), new HttpFactory())->getSerializer());
+        $this->assertInstanceOf(
+            Serializer::class,
+            ClientBuilder::create(new HttpClient(), new HttpFactory())->getSerializer()
+        );
     }
 }

@@ -9,24 +9,23 @@ use DMT\VatServiceEu\ClientBuilder;
 use DMT\VatServiceEu\Handler\CheckVatHandler;
 use DMT\VatServiceEu\Request\CheckVat;
 use DMT\VatServiceEu\Request\CheckVatApprox;
+use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\HttpFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CheckVatHandlerTest extends TestCase
 {
     use MockedResponseTrait;
 
-    /**
-     * Test the testCheckVat method.
-     */
-    public function testCheckVat()
+    public function testCheckVat(): void
     {
-        $httpClient = new \GuzzleHttp\Client([
+        $httpClient = new HttpClient([
             'handler' => HandlerStack::create(
                 new MockHandler([
-                    $this->getMockedResponse($this->checkVatResponse, 'NL', '840888644B01')
+                    $this->getMockedResponse(self::$checkVatResponse, 'NL', '840888644B01')
                 ])
             )
         ]);
@@ -38,18 +37,13 @@ class CheckVatHandlerTest extends TestCase
         );
         $response = $handler->handleCheckVat(new CheckVat());
 
-        static::assertSame('NL', $response->getCountryCode());
-        static::assertSame('840888644B01', $response->getVatNumber());
-        static::assertTrue($response->isValid());
+        $this->assertSame('NL', $response->getCountryCode());
+        $this->assertSame('840888644B01', $response->getVatNumber());
+        $this->assertTrue($response->isValid());
     }
 
-    /**
-     * @dataProvider provideSoapFault
-     *
-     * @param \GuzzleHttp\Client $httpClient
-     * @param string $message
-     */
-    public function testCheckVatSoapFaults(\GuzzleHttp\Client $httpClient, string $message)
+    #[DataProvider(methodName: 'provideSoapFault')]
+    public function testCheckVatSoapFaults(HttpClient $httpClient, string $message): void
     {
         static::expectExceptionObject(new SoapFaultException('Server', $message));
 
@@ -61,15 +55,12 @@ class CheckVatHandlerTest extends TestCase
         $handler->handleCheckVat(new CheckVat());
     }
 
-    /**
-     * Test the checkVatApprox method.
-     */
-    public function testCheckVatApprox()
+    public function testCheckVatApprox(): void
     {
-        $httpClient = new \GuzzleHttp\Client([
+        $httpClient = new HttpClient([
             'handler' => HandlerStack::create(
                 new MockHandler([
-                    $this->getMockedResponse($this->checkVatApproxResponse, 'GB', '8863')
+                    $this->getMockedResponse(self::$checkVatApproxResponse, 'GB', '8863')
                 ])
             )
         ]);
@@ -81,18 +72,13 @@ class CheckVatHandlerTest extends TestCase
         );
         $response = $handler->handleCheckVatApprox(new CheckVatApprox());
 
-        static::assertSame('GB', $response->getCountryCode());
-        static::assertSame('8863', $response->getVatNumber());
-        static::assertFalse($response->isValid());
+        $this->assertSame('GB', $response->getCountryCode());
+        $this->assertSame('8863', $response->getVatNumber());
+        $this->assertFalse($response->isValid());
     }
 
-    /**
-     * @dataProvider provideSoapFault
-     *
-     * @param \GuzzleHttp\Client $httpClient
-     * @param string $message
-     */
-    public function testCheckVatApproxSoapFaults(\GuzzleHttp\Client $httpClient, string $message)
+    #[DataProvider(methodName: 'provideSoapFault')]
+    public function testCheckVatApproxSoapFaults(HttpClient $httpClient, string $message)
     {
         static::expectExceptionObject(new SoapFaultException('Server', $message));
 
@@ -104,25 +90,22 @@ class CheckVatHandlerTest extends TestCase
         $handler->handleCheckVatApprox(new CheckVatApprox());
     }
 
-    /**
-     * @return array
-     */
-    public function provideSoapFault(): array
+    public static function provideSoapFault(): iterable
     {
-        $httpClient = new \GuzzleHttp\Client([
+        $httpClient = new HttpClient([
             'handler' => HandlerStack::create(
                 new MockHandler([
-                    $this->getMockedResponse($this->soapFault, 'INVALID_INPUT'),
-                    $this->getMockedResponse($this->soapFault, 'INVALID_REQUESTER_INFO'),
-                    $this->getMockedResponse($this->soapFault, 'SERVICE_UNAVAILABLE'),
-                    $this->getMockedResponse($this->soapFault, 'MS_UNAVAILABLE'),
-                    $this->getMockedResponse($this->soapFault, 'TIMEOUT'),
-                    $this->getMockedResponse($this->soapFault, 'VAT_BLOCKED'),
-                    $this->getMockedResponse($this->soapFault, 'IP_BLOCKED'),
-                    $this->getMockedResponse($this->soapFault, 'GLOBAL_MAX_CONCURRENT_REQ'),
-                    $this->getMockedResponse($this->soapFault, 'GLOBAL_MAX_CONCURRENT_REQ_TIME'),
-                    $this->getMockedResponse($this->soapFault, 'MS_MAX_CONCURRENT_REQ'),
-                    $this->getMockedResponse($this->soapFault, 'MS_MAX_CONCURRENT_REQ_TIME'),
+                    static::getMockedResponse(self::$soapFault, 'INVALID_INPUT'),
+                    static::getMockedResponse(self::$soapFault, 'INVALID_REQUESTER_INFO'),
+                    static::getMockedResponse(self::$soapFault, 'SERVICE_UNAVAILABLE'),
+                    static::getMockedResponse(self::$soapFault, 'MS_UNAVAILABLE'),
+                    static::getMockedResponse(self::$soapFault, 'TIMEOUT'),
+                    static::getMockedResponse(self::$soapFault, 'VAT_BLOCKED'),
+                    static::getMockedResponse(self::$soapFault, 'IP_BLOCKED'),
+                    static::getMockedResponse(self::$soapFault, 'GLOBAL_MAX_CONCURRENT_REQ'),
+                    static::getMockedResponse(self::$soapFault, 'GLOBAL_MAX_CONCURRENT_REQ_TIME'),
+                    static::getMockedResponse(self::$soapFault, 'MS_MAX_CONCURRENT_REQ'),
+                    static::getMockedResponse(self::$soapFault, 'MS_MAX_CONCURRENT_REQ_TIME'),
                 ])
             )
         ]);
