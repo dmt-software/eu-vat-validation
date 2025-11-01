@@ -107,13 +107,13 @@ class ClientBuilder
                 ->setDeserializationVisitor('soap', new SoapDeserializationVisitorFactory())
                 ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
                 ->configureListeners(
-                    function (EventDispatcher $dispatcher) {
+                    function (EventDispatcher $dispatcher): void {
                         $dispatcher->addSubscriber(
                             new SoapMessageEventSubscriber()
                         );
                     }
                 )
-                ->configureHandlers(function (HandlerRegistry $registry) {
+                ->configureHandlers(function (HandlerRegistry $registry): void {
                     $registry->registerSubscribingHandler(new SoapDateHandler());
                 })
                 ->build()

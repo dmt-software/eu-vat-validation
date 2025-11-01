@@ -7,12 +7,13 @@ use DMT\CommandBus\Validator\ValidationMiddleware;
 use DMT\VatServiceEu\Request\CheckVatApprox;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class CheckVatApproxTest extends TestCase
 {
-    public function testPropertyAccessors()
+    public function testPropertyAccessors(): void
     {
         $checkVatApprox = new CheckVatApprox();
         $checkVatApprox->setCountryCode('NL');
@@ -25,42 +26,33 @@ class CheckVatApproxTest extends TestCase
         $checkVatApprox->setRequesterCountryCode('BE');
         $checkVatApprox->setRequesterVatNumber('882664.557788');
 
-        static::assertSame('NL', $checkVatApprox->getCountryCode());
-        static::assertSame('999.6655322', $checkVatApprox->getVatNumber());
-        static::assertSame('Company and co', $checkVatApprox->getTraderName());
-        static::assertSame('NL-18', $checkVatApprox->getTraderCompanyType());
-        static::assertSame('Foolane 1', $checkVatApprox->getTraderStreet());
-        static::assertSame('44377', $checkVatApprox->getTraderPostcode());
-        static::assertSame('Bar', $checkVatApprox->getTraderCity());
-        static::assertSame('BE', $checkVatApprox->getRequesterCountryCode());
-        static::assertSame('882664.557788', $checkVatApprox->getRequesterVatNumber());
+        $this->assertSame('NL', $checkVatApprox->getCountryCode());
+        $this->assertSame('999.6655322', $checkVatApprox->getVatNumber());
+        $this->assertSame('Company and co', $checkVatApprox->getTraderName());
+        $this->assertSame('NL-18', $checkVatApprox->getTraderCompanyType());
+        $this->assertSame('Foolane 1', $checkVatApprox->getTraderStreet());
+        $this->assertSame('44377', $checkVatApprox->getTraderPostcode());
+        $this->assertSame('Bar', $checkVatApprox->getTraderCity());
+        $this->assertSame('BE', $checkVatApprox->getRequesterCountryCode());
+        $this->assertSame('882664.557788', $checkVatApprox->getRequesterVatNumber());
     }
 
-    /**
-     * @dataProvider provideViolation
-     *
-     * @param CheckVatApprox $checkVat
-     * @param string $message
-     */
-    public function testValidation(CheckVatApprox $checkVat, string $message)
+    #[DataProvider('provideViolation')]
+    public function testValidation(CheckVatApprox $checkVat, string $message): void
     {
         try {
             $validator = new ValidationMiddleware();
-            $validator->execute($checkVat, function () {
-            });
+            $validator->execute($checkVat, function (): void {});
         } catch (ValidationException $exception) {
             $violations = array_map(
                 fn(ConstraintViolation $violation) => $violation->getMessage(),
                 iterator_to_array($exception->getViolations())
             );
-            static::assertContains($message, $violations);
+            $this->assertContains($message, $violations);
         }
     }
 
-    /**
-     * @return \Generator
-     */
-    public function provideViolation()
+    public static function provideViolation(): iterable
     {
         $serializer = SerializerBuilder::create()
             ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())

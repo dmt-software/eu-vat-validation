@@ -15,7 +15,7 @@ trait MockedResponseTrait
      *
      * @var string
      */
-    protected $soapFault = <<<TXT
+    protected static $soapFault = <<<TXT
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>
         <soap:Fault>
@@ -31,7 +31,7 @@ TXT;
      *
      * @var string
      */
-    protected $checkVatResponse = <<<TXT
+    protected static $checkVatResponse = <<<TXT
 <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
     <env:Header/>
     <env:Body>
@@ -52,7 +52,7 @@ TXT;
      *
      * @var string
      */
-    protected $checkVatApproxResponse = <<<TXT
+    protected static $checkVatApproxResponse = <<<TXT
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>
         <checkVatApproxResponse xmlns="urn:ec.europa.eu:taxud:vies:services:checkVat:types">
@@ -77,7 +77,7 @@ TXT;
      *
      * @return ResponseInterface
      */
-    public function getMockedResponse(string $template, ...$arguments): ResponseInterface
+    public static function getMockedResponse(string $template, ...$arguments): ResponseInterface
     {
         return new Response(200, [], vsprintf($template, $arguments));
     }

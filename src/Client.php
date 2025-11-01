@@ -15,19 +15,8 @@ use League\Tactician\CommandBus;
  */
 class Client
 {
-    /**
-     * @var CommandBus
-     */
-    protected $commandBus;
-
-    /**
-     * Client constructor.
-     *
-     * @param CommandBus $commandBus
-     */
-    public function __construct(CommandBus $commandBus)
+    public function __construct(private readonly CommandBus $commandBus)
     {
-        $this->commandBus = $commandBus;
     }
 
     /**

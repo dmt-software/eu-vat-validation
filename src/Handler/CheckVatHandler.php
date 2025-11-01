@@ -9,7 +9,6 @@ use DMT\VatServiceEu\Request\RequestInterface;
 use DMT\VatServiceEu\Response\CheckVatApproxResponse;
 use DMT\VatServiceEu\Response\CheckVatResponse;
 use DMT\VatServiceEu\Response\ResponseInterface;
-use GuzzleHttp\Client;
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
@@ -20,43 +19,15 @@ use Psr\Http\Message\RequestFactoryInterface;
  */
 class CheckVatHandler
 {
-    /**
-     * @var RequestHandlerInterface
-     */
-    protected $requestHandler;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-
-    /**
-     * @var RequestFactoryInterface
-     */
-    protected $requestFactory;
-
-    /**
-     * CheckVatHandler constructor.
-     *
-     * @param RequestHandlerInterface $httpClient
-     * @param SerializerInterface $serializer
-     */
     public function __construct(
-        RequestHandlerInterface $httpClient,
-        SerializerInterface     $serializer,
-        RequestFactoryInterface $requestFactory
-    )
-    {
-        $this->requestHandler = $httpClient;
-        $this->serializer = $serializer;
-        $this->requestFactory = $requestFactory;
+        private RequestHandlerInterface $requestHandler,
+        private SerializerInterface $serializer,
+        private RequestFactoryInterface $requestFactory
+    ) {
     }
 
     /**
      * Check a VAT number against the VIES VAT validation service.
-     *
-     * @param CheckVat $checkVat
-     * @return CheckVatResponse
      */
     public function handleCheckVat(CheckVat $checkVat): CheckVatResponse
     {
@@ -65,9 +36,6 @@ class CheckVatHandler
 
     /**
      * Check a VAT number against the VIES VAT validation service.
-     *
-     * @param CheckVatApprox $checkVatApprox
-     * @return CheckVatApproxResponse
      */
     public function handleCheckVatApprox(CheckVatApprox $checkVatApprox): CheckVatApproxResponse
     {
@@ -77,11 +45,14 @@ class CheckVatHandler
     /**
      * Execute the request on the VIES VAT web service.
      *
+     * @template T
+     *
      * @param RequestInterface $request
-     * @param string $responseClass
-     * @return CheckVatResponse|CheckVatApproxResponse
+     * @param class-string<T> $responseClass
+     *
+     * @return T of ResponseInterface
      */
-    protected function execute(RequestInterface $request, string $responseClass): ResponseInterface
+    private function execute(RequestInterface $request, string $responseClass): ResponseInterface
     {
         $httpRequest = $this->requestFactory
             ->createRequest(

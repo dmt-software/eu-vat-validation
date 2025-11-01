@@ -7,46 +7,39 @@ use DMT\CommandBus\Validator\ValidationMiddleware;
 use DMT\VatServiceEu\Request\CheckVat;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class CheckVatTest extends TestCase
 {
-    public function testPropertyAccessors()
+    public function testPropertyAccessors(): void
     {
         $request = new CheckVat();
         $request->setCountryCode('FR');
         $request->setVatNumber('9774300278');
 
-        static::assertSame('FR', $request->getCountryCode());
-        static::assertSame('9774300278', $request->getVatNumber());
+        $this->assertSame('FR', $request->getCountryCode());
+        $this->assertSame('9774300278', $request->getVatNumber());
     }
 
-    /**
-     * @dataProvider provideViolation
-     *
-     * @param CheckVat $checkVat
-     * @param string $message
-     */
-    public function testValidation(CheckVat $checkVat, string $message)
+    #[DataProvider(methodName: 'provideViolation')]
+    public function testValidation(CheckVat $checkVat, string $message): void
     {
         try {
             $validator = new ValidationMiddleware();
-            $validator->execute($checkVat, function () {});
+            $validator->execute($checkVat, function (): void {});
         } catch (ValidationException $exception) {
             $violations = array_map(
                 fn(ConstraintViolation $violation) => $violation->getMessage(),
                 iterator_to_array($exception->getViolations())
             );
-            static::assertCount(1, $exception->getViolations());
-            static::assertContains($message, $violations);
+            $this->assertCount(1, $exception->getViolations());
+            $this->assertContains($message, $violations);
         }
     }
 
-    /**
-     * @return \Generator
-     */
-    public function provideViolation()
+    public static function provideViolation(): iterable
     {
         $serializer = SerializerBuilder::create()
             ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())

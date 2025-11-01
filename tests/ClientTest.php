@@ -11,6 +11,7 @@ use DMT\VatServiceEu\Response\CheckVatResponse;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\HttpFactory;
 use League\Tactician\CommandBus;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +31,7 @@ class ClientTest extends TestCase
 
         $client = new Client($commandBus);
 
-        static::assertInstanceOf(CheckVatResponse::class, $client->execute(new CheckVat()));
+        $this->assertInstanceOf(CheckVatResponse::class, $client->execute(new CheckVat()));
     }
 
     /**
@@ -47,13 +48,11 @@ class ClientTest extends TestCase
 
         $client = new Client($commandBus);
 
-        static::assertInstanceOf(CheckVatApproxResponse::class, $client->execute(new CheckVatApprox()));
+        $this->assertInstanceOf(CheckVatApproxResponse::class, $client->execute(new CheckVatApprox()));
     }
 
-    /**
-     * @group functional
-     */
-    public function testClientImplementation()
+    #[Group('functional')]
+    public function testClientImplementation(): void
     {
         $request = new CheckVat();
         $request->setCountryCode('NL');
@@ -64,8 +63,8 @@ class ClientTest extends TestCase
         /** @var CheckVatResponse $response */
         $response = $client->execute($request);
 
-        static::assertSame($request->getCountryCode(), $response->getCountryCode());
-        static::assertSame($request->getVatNumber(), $response->getVatNumber());
-        static::assertIsBool($response->isValid());
+        $this->assertSame($request->getCountryCode(), $response->getCountryCode());
+        $this->assertSame($request->getVatNumber(), $response->getVatNumber());
+        $this->assertIsBool($response->isValid());
     }
 }
